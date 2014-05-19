@@ -1,0 +1,4 @@
+docker-registry-core>=1,<2
+Flask==0.10.1
+python-glanceclient==0.10.0
+python-keystoneclient==0.3.1
