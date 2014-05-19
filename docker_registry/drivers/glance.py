@@ -9,7 +9,10 @@ Said alternate storage may be an other registry driver, but usually it's
 file(system) or swift.
 """
 
-import flask
+try:
+    import flask
+except Exception:
+    pass
 import glanceclient
 import os
 
@@ -152,8 +155,13 @@ class Storage(driver.Base):
         return os.environ['OS_GLANCE_URL']
 
     def _create_glance_client(self):
-        token = flask.request.headers.get('X-Meta-Auth-Token')
-        endpoint = flask.request.headers.get('X-Meta-Glance-Endpoint')
+        token = None
+        endpoint = None
+        try:
+            token = flask.request.headers.get('X-Meta-Auth-Token')
+            endpoint = flask.request.headers.get('X-Meta-Glance-Endpoint')
+        except Exception:
+            pass
         if not token:
             token = self._get_auth_token()
         if not endpoint:
