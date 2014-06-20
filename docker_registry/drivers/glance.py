@@ -210,7 +210,8 @@ class Storage(driver.Base):
         filters = {
             'disk_format': self.disk_format,
             'container_format': self.container_format,
-            'properties': {'id': image_id}
+            'properties': {'id': image_id},
+            'is_public': None
         }
         images = [i for i in glance.images.list(filters=filters)]
         if images:
