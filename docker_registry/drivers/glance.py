@@ -25,10 +25,11 @@ from docker_registry.core import driver
 from docker_registry.core import lru
 
 
-alt = None
+alt_driver = None
+alt_instance = None
 
 """This is a decorator that let us forward some requests to the alternate
-backend (alt), based on the url"""
+backend (alt_driver), based on the url"""
 
 
 def intercept(func):
@@ -46,10 +47,10 @@ def intercept(func):
             if not path.endswith("_files"):
                 return func(*args, **kwargs)
 
-            return getattr(alt, func.__name__)(*args[1:], **kwargs)
+            return getattr(alt_driver, func.__name__)(alt_instance, *args[1:], **kwargs)
 
         if path.startswith('repositories'):
-            return getattr(alt, func.__name__)(*args[1:], **kwargs)
+                return getattr(alt_driver, func.__name__)(alt_instance, *args[1:], **kwargs)
 
         return func(*args, **kwargs)
     return wrapper
@@ -69,9 +70,10 @@ class Storage(driver.Base):
         self._config = config
         # self._storage_layers = Storage(config)
         kind = config.get('storage_alternate', 'file')
-        global alt
-        print(kind)
-        alt = driver.fetch(kind)
+        global alt_driver
+        global alt_instance
+        alt_driver = driver.fetch(kind)
+        alt_instance = alt_driver()
 
         # Hooks the tag changes
         # signals.tag_created.connect(self._handler_tag_created)
