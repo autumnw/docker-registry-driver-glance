@@ -7,7 +7,7 @@ python:
   - "3.4"
 
 before_install:
-  - sudo add-apt-repository ppa:glance-core/trunk
+  - sudo add-apt-repository cloud-archive:icehouse
   - sudo apt-get update -qq
   - sudo apt-get install glance python-dev libffi-dev -y
 
