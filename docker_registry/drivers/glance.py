@@ -69,7 +69,13 @@ class Storage(driver.Base):
     def __init__(self, path=None, config=None):
         self._config = config
         # self._storage_layers = Storage(config)
-        kind = config.get('storage_alternate', 'file')
+        #kind = config.get('storage_alternate', 'file')
+        kind = 'file'
+        try:
+            kind = config['storage_alternate']
+        except KeyError:
+            pass
+        
         global alt_driver
         global alt_instance
         alt_driver = driver.fetch(kind)
